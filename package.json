@@ -1,0 +1,21 @@
+{
+  "name": "recipe-tool",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
+  "devDependencies": {
+    "typescript": "^2.9.2"
+  },
+  "scripts": {
+    "build": "tsc && typescript-json-schema ./src/models/Database.ts --out ./dist/types.schema '*'",
+    "dev": "npm run build && node dist/index.js"
+  },
+  "dependencies": {
+    "@types/better-sqlite3": "^3.1.3",
+    "@types/express": "^4.16.0",
+    "better-sqlite3": "^4.1.4",
+    "express": "^4.16.3",
+    "kroger": "^1.0.1",
+    "puppeteer": "^1.6.1"
+  }
+}
