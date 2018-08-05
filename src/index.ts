@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as ajv from 'ajv';
 
 import Kroger from 'kroger/dist';
 import Database from './database';
@@ -11,8 +12,10 @@ var kroger = new Kroger("https://www.fredmeyer.com/");
 var database = new Database();
 
 let app = express();
-let expressRouter = router(database);
+let ajvValidator = ajv();
+let expressRouter = router(database, ajvValidator);
 
+app.use(express.json());
 app.use("/", expressRouter);
 
 app.listen(8000);

@@ -1,11 +1,12 @@
 import * as express from 'express';
-import Database from '../database';
 import { Router } from 'express';
+import * as ajv from 'ajv';
+
+import Database from '../database';
 import { Item } from '../models/Database';
-import { request } from 'http';
 import { error } from './Error';
 
-export const itemsController = ((database: Database): Router => {
+export const itemsController = ((database: Database, ajvValidator: ajv.Ajv): Router => {
     let router = express.Router();
 
     router.get("/all", (request, response) => {
@@ -20,13 +21,12 @@ export const itemsController = ((database: Database): Router => {
     });
 
     router.post("/create", (request, response) => {
-        try {
-            let json = JSON.parse(request.body);
-
-            
-        } catch (e) {
-            response.json(error("Could not create item", e));
+        if(!ajvValidator.validate("#/definitions/Item", request.body)) {
+            response.json(error("Could not create item", ajvValidator.errorsText()));
+            return;
         }
+
+        console.log(request.body);
     });
 
     return router;

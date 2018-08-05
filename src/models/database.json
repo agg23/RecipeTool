@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Item": {
+            "properties": {
+                "brandName": {
+                    "type": "string"
+                },
+                "detailImageUrl": {
+                    "type": "string"
+                },
+                "foodCategoryId": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "itemSize": {
+                    "type": "number"
+                },
+                "itemSizeType": {
+                    "type": "string"
+                },
+                "lastSeenPrice": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "upc": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "brandName",
+                "id",
+                "name",
+                "upc"
+            ],
+            "type": "object"
+        }
+    }
+}
+
