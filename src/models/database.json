@@ -12,9 +12,6 @@
                 "foodCategoryId": {
                     "type": "number"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "imageUrl": {
                     "type": "string"
                 },
@@ -36,7 +33,6 @@
             },
             "required": [
                 "brandName",
-                "id",
                 "name",
                 "upc"
             ],

@@ -1,4 +1,7 @@
 export interface Item {
+    /**
+     * @ignore
+     */
     id: string;
     name: string;
     brandName: string;
