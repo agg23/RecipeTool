@@ -20,6 +20,49 @@ export const itemsController = ((database: Database, ajvValidator: ajv.Ajv): Rou
         response.json(result);
     });
 
+    router.get("/upc/:upc", (request, response) => {
+        let statement = database.get().prepare(`SELECT id, name, upc,
+            imageUrl, lastSeenPrice, detailImageUrl,
+            brandName, itemSize, itemSizeType, foodCategoryId
+            FROM Items
+            WHERE upc == $upc`);
+
+        let result = statement.get({
+            upc: request.params["upc"]
+        }) as Item;
+
+        response.json(result);
+    });
+
+    router.get("/id/:id", (request, response) => {
+        let statement = database.get().prepare(`SELECT id, name, upc,
+            imageUrl, lastSeenPrice, detailImageUrl,
+            brandName, itemSize, itemSizeType, foodCategoryId
+            FROM Items
+            WHERE id == $id`);
+
+        let result = statement.get({
+            id: request.params["id"]
+        }) as Item;
+
+        response.json(result);
+    });
+
+    router.get("/brand/:brandName", (request, response) => {
+        let statement = database.get().prepare(`SELECT id, name, upc,
+            imageUrl, lastSeenPrice, detailImageUrl,
+            brandName, itemSize, itemSizeType, foodCategoryId
+            FROM Items
+            WHERE brandName == $brandName
+            COLLATE NOCASE`);
+
+        let result = statement.all({
+            brandName: request.params["brandName"]
+        }) as Item[];
+
+        response.json(result);
+    });
+
     router.post("/create", (request, response) => {
         if(!ajvValidator.validate("#/definitions/Item", request.body)) {
             response.json(error("item/create", ajvValidator.errorsText()));
