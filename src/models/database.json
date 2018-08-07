@@ -37,6 +37,26 @@
                 "upc"
             ],
             "type": "object"
+        },
+        "Recipe": {
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "servingSize": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "type": "object"
         }
     }
 }

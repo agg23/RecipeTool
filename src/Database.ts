@@ -57,7 +57,7 @@ export default class Database {
         this.db.prepare(`
             CREATE TABLE IF NOT EXISTS "Recipes" (
                 'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                'name' TEXT NOT NULL,
+                'name' TEXT NOT NULL UNIQUE,
                 'imageUrl' TEXT,
                 'description' TEXT,
                 'servingSize' REAL

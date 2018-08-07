@@ -7,6 +7,7 @@ import Database from '../database';
 
 // @ts-ignore Valid TS, VSCode just doesn't like it
 import * as schema from '../models/database.json';
+import { recipeController } from './RecipesController';
 
 export const router = (database: Database, ajvValidator: ajv.Ajv): Router => {
     let router = express.Router();
@@ -15,6 +16,7 @@ export const router = (database: Database, ajvValidator: ajv.Ajv): Router => {
     ajvValidator.addSchema(partialSchema(JSON.parse(JSON.stringify(schema))), "partialSchema");
 
     router.use("/items", itemsController(database, ajvValidator));
+    router.use("/recipes", recipeController(database, ajvValidator));
 
     return router;
 }

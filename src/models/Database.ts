@@ -2,7 +2,7 @@ export interface Item {
     /**
      * @ignore
      */
-    id: string;
+    id: number;
     name: string;
     brandName: string;
     upc: number;
@@ -14,4 +14,15 @@ export interface Item {
     itemSizeType?: string;
 
     foodCategoryId?: number;
+}
+
+export interface Recipe {
+    /**
+     * @ignore
+     */
+    id: number;
+    name: string;
+    imageUrl?: string;
+    description?: string;
+    servingSize?: number;
 }

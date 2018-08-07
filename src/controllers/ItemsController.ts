@@ -31,6 +31,12 @@ export const itemsController = ((database: Database, ajvValidator: ajv.Ajv): Rou
             upc: request.params["upc"]
         }) as Item;
 
+        if(result) {
+            response.json(result);
+        } else {
+            response.json({});
+        }
+
         response.json(result);
     });
 
@@ -44,6 +50,12 @@ export const itemsController = ((database: Database, ajvValidator: ajv.Ajv): Rou
         let result = statement.get({
             id: request.params["id"]
         }) as Item;
+
+        if(result) {
+            response.json(result);
+        } else {
+            response.json({});
+        }
 
         response.json(result);
     });
