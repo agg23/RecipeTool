@@ -34,7 +34,7 @@ export const itemsController = ((database: Database, ajvValidator: ajv.Ajv): Rou
         response.json(result);
     });
 
-    router.get("/id/:id", (request, response) => {
+    router.get("/:id", (request, response) => {
         let statement = database.get().prepare(`SELECT id, name, upc,
             imageUrl, lastSeenPrice, detailImageUrl,
             brandName, itemSize, itemSizeType, foodCategoryId
@@ -64,7 +64,7 @@ export const itemsController = ((database: Database, ajvValidator: ajv.Ajv): Rou
     });
 
     router.post("/create", (request, response) => {
-        if(!ajvValidator.validate("#/definitions/Item", request.body)) {
+        if(!ajvValidator.validate("schema#/definitions/Item", request.body)) {
             response.json(error("item/create", ajvValidator.errorsText()));
             return;
         }
@@ -90,6 +90,34 @@ export const itemsController = ((database: Database, ajvValidator: ajv.Ajv): Rou
         });
 
         response.json(success("item/create", Number(result.lastInsertROWID)));
+    });
+
+    router.patch("/:id", (request, response) => {
+        if(!ajvValidator.validate("partialSchema#/definitions/Item", request.body)) {
+            response.json(error("item/patch", ajvValidator.errorsText()));
+            return;
+        }
+
+        let id = request.params["id"];
+        let newItem: Item = request.body;
+
+        let result = database.patch("Items", id, newItem).run({
+            name: newItem.name,
+            upc: newItem.upc,
+            imageUrl: newItem.imageUrl,
+            lastSeenPrice: newItem.lastSeenPrice,
+            detailImageUrl: newItem.detailImageUrl,
+            brandName: newItem.brandName,
+            itemSize: newItem.itemSize,
+            itemSizeType: newItem.itemSizeType,
+            foodCategoryId: newItem.foodCategoryId
+        });
+
+        if(result.changes > 0) {
+            response.json(success("item/patch", id));
+        } else {
+            response.json(error("item/patch", id));
+        }
     });
 
     return router;

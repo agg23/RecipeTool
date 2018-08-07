@@ -80,4 +80,23 @@ export default class Database {
     get(): sqlite3 {
         return this.db;
     }
+
+    patch(table: string, id: string, params: Object) {
+        let setString = "";
+
+        for(let key in params) {
+            setString += `${key} = $${key},`;
+        }
+
+        setString = setString.substring(0, setString.length - 1);
+
+        let query = `UPDATE ${table}
+            SET ${setString}
+            WHERE id == ${id}
+        `;
+
+        console.log(query);
+
+        return this.db.prepare(query);
+    }
 }
