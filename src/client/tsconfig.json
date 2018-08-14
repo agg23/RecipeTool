@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "es2017",
+      "module": "commonjs",
+      "outDir": "../../dist/client",
+      "sourceMap": true,
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "jsx": "react"
+    },
+    "include": [
+      "**/*.ts*"
+    ],
+    "exclude": [
+      "../../node_modules"
+    ]
+  }
