@@ -57,6 +57,33 @@
                 "name"
             ],
             "type": "object"
+        },
+        "RecipeStep": {
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "number"
+                },
+                "foodCategoryId": {
+                    "type": "number"
+                },
+                "recipeId": {
+                    "type": "number"
+                },
+                "step": {
+                    "type": "number"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "recipeId",
+                "step"
+            ],
+            "type": "object"
         }
     }
 }

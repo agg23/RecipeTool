@@ -26,3 +26,16 @@ export interface Recipe {
     description?: string;
     servingSize?: number;
 }
+
+export interface RecipeStep {
+    /**
+     * @ignore
+     */
+    id: number;
+    recipeId: number;
+    step: number;
+    description?: string;
+    foodCategoryId?: number;
+    type?: string;
+    duration?: number;
+}

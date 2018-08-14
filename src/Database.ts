@@ -67,8 +67,9 @@ export default class Database {
         this.db.prepare(`
             CREATE TABLE IF NOT EXISTS "RecipeSteps" (
                 'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                'recipeId' INTEGER,
+                'recipeId' INTEGER NOT NULL,
                 'step' INTEGER NOT NULL,
+                'description' TEXT,
                 'foodCategoryId' INTEGER,
                 'type' TEXT,
                 'duration' INTEGER,
