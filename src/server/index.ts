@@ -1,8 +1,9 @@
 import * as express from 'express';
 import * as ajv from 'ajv';
+import * as cors from 'cors';
 
 import Kroger from 'kroger/dist';
-import Database from './database';
+import Database from './Database';
 import { router } from './controllers/Router';
 
 console.log("Setting up");
@@ -15,6 +16,7 @@ let app = express();
 let ajvValidator = ajv();
 let expressRouter = router(database, ajvValidator);
 
+app.use(cors());
 app.use(express.json());
 app.use("/", expressRouter);
 

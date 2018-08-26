@@ -3,7 +3,7 @@ import { Router } from 'express';
 import * as ajv from 'ajv';
 
 import { itemsController } from './ItemsController'
-import Database from '../database';
+import Database from '../Database';
 
 // @ts-ignore Valid TS, VSCode just doesn't like it
 import * as schema from '../models/database.json';

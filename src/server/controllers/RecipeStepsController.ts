@@ -2,7 +2,7 @@ import * as express from 'express';
 import { Router } from 'express';
 import * as ajv from 'ajv';
 
-import Database from '../database';
+import Database from '../Database';
 import { RecipeStep } from '../models/Database';
 import { error, success } from './messages';
 
