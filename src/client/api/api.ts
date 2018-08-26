@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import Axios, { AxiosResponse, AxiosError } from "axios";
+import Axios, { AxiosResponse, AxiosError, AxiosPromise } from "axios";
 
 import { IAction, ResponseAction, ErrorAction } from "./interfaces";
 
@@ -34,12 +34,18 @@ function createFailureAction(name: string, error: AxiosError, type: ActionType):
 }
 
 export function getApi(name: string, path: string, datum?: string) {
+    return genericRequest(getRequestMethod, name, path, datum, null);
+}
+
+export function postApi(name: string, path: string, datum?: string, data?: Object) {
+    return genericRequest(postRequestMethod, name, path, datum, data);
+}
+
+function genericRequest(method: (name: string, path: string, datum?: string, data?: Object) => AxiosPromise<any>, name: string, path: string, datum?: string, data?: Object) {
     return function (dispatch: Dispatch<any>) {
         dispatch(createAction(name, ActionType.REQUEST));
 
-        console.log("Requesting url " + endpoint + path);
-
-        return Axios.get(endpoint + path).then(function(response) {
+        return method(name, path, datum, data).then(function(response) {
             dispatch(createResponseAction(name, response, ActionType.SUCCESS));
         }).catch(function(error) {
             console.log(error);
@@ -47,4 +53,24 @@ export function getApi(name: string, path: string, datum?: string) {
             throw error;
         });
     }
+}
+
+function getRequestMethod(name: string, path: string, datum?: string, data?: Object): AxiosPromise<any> {
+    let url = endpoint + path;
+
+    if (datum) {
+        url += `/${datum}`;
+    }
+
+    return Axios.get(url);
+}
+
+function postRequestMethod(name: string, path: string, datum?: string, data?: Object): AxiosPromise<any> {
+    let url = endpoint + path;
+
+    if (datum) {
+        url += `/${datum}`;
+    }
+
+    return Axios.post(url, data);
 }

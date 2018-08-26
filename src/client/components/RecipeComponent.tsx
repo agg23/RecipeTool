@@ -3,6 +3,7 @@ import { connect, DispatchProp } from "react-redux";
 import { IState } from "../models/IState";
 import { requestAllRecipes } from "../api/RecipeAPI";
 import { Recipe } from "../api/models/Recipe";
+import CreateRecipe from "./recipes/CreateRecipe";
 
 interface IRecipeComponentReduxProps {
     recipes: Recipe[],
@@ -22,6 +23,7 @@ class RecipeComponent extends React.Component<IRecipeComponentReduxProps & Dispa
                         return <li key={value.id}>{`Name: ${value.name}`}</li>
                     })}
                 </ul>
+                <CreateRecipe />
             </div>
         );
     }
