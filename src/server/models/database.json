@@ -7,22 +7,40 @@
                     "type": "string"
                 },
                 "detailImageUrl": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "foodCategoryId": {
-                    "type": "number"
+                    "type": [
+                        "number",
+                        "null"
+                    ]
                 },
                 "imageUrl": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "itemSize": {
-                    "type": "number"
+                    "type": [
+                        "number",
+                        "null"
+                    ]
                 },
                 "itemSizeType": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "lastSeenPrice": {
-                    "type": "number"
+                    "type": [
+                        "number",
+                        "null"
+                    ]
                 },
                 "name": {
                     "type": "string"
@@ -41,16 +59,25 @@
         "Recipe": {
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "imageUrl": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "name": {
                     "type": "string"
                 },
                 "servingSize": {
-                    "type": "number"
+                    "type": [
+                        "number",
+                        "null"
+                    ]
                 }
             },
             "required": [
@@ -61,13 +88,22 @@
         "RecipeStep": {
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "duration": {
-                    "type": "number"
+                    "type": [
+                        "number",
+                        "null"
+                    ]
                 },
                 "foodCategoryId": {
-                    "type": "number"
+                    "type": [
+                        "number",
+                        "null"
+                    ]
                 },
                 "recipeId": {
                     "type": "number"
@@ -76,7 +112,10 @@
                     "type": "number"
                 },
                 "type": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "required": [
