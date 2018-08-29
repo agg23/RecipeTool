@@ -4,6 +4,7 @@ import { Recipe } from "../../api/models/Recipe";
 import { requestCreateRecipe, requestPatchRecipe } from "../../api/RecipeAPI";
 import { nullIfEmpty } from "../../utility/string";
 import { RecipeStep } from "../../api/models/RecipeStep";
+import { RouteProps } from "react-router";
 
 interface IEditRecipeProps {
     recipe?: Recipe;
@@ -28,6 +29,10 @@ class EditRecipe extends React.Component<IEditRecipeProps & DispatchProp<any>, I
     } : {
         name: "",
         steps: [],
+    }
+
+    componentDidMount() {
+        console.log(this.props);
     }
 
     inputChange(event) {

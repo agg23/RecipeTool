@@ -4,6 +4,7 @@ import { IState } from "../models/IState";
 import { requestAllRecipes } from "../api/RecipeAPI";
 import { Recipe } from "../api/models/Recipe";
 import CreateRecipe from "./recipes/CreateRecipe";
+import { Link } from "react-router-dom";
 
 interface IRecipeComponentReduxProps {
     recipes: Recipe[],
@@ -20,7 +21,7 @@ class RecipeComponent extends React.Component<IRecipeComponentReduxProps & Dispa
                 <div>Recipes</div>
                 <ul>
                     {this.props.recipes.map((value) => {
-                        return <li key={value.id}>{`Name: ${value.name}`}</li>
+                        return <li key={value.id}>{`Name: ${value.name}`}<Link to={`recipe/${value.id}`}>Edit</Link></li>
                     })}
                 </ul>
                 <CreateRecipe />
