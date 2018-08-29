@@ -41,6 +41,10 @@ export function postApi(name: string, path: string, datum?: string, data?: Objec
     return genericRequest(postRequestMethod, name, path, datum, data);
 }
 
+export function patchApi(name: string, path: string, datum?: string, data?: Object) {
+    return genericRequest(patchRequestMethod, name, path, datum, data);
+}
+
 function genericRequest(method: (name: string, path: string, datum?: string, data?: Object) => AxiosPromise<any>, name: string, path: string, datum?: string, data?: Object) {
     return function (dispatch: Dispatch<any>) {
         dispatch(createAction(name, ActionType.REQUEST));
@@ -73,4 +77,14 @@ function postRequestMethod(name: string, path: string, datum?: string, data?: Ob
     }
 
     return Axios.post(url, data);
+}
+
+function patchRequestMethod(name: string, path: string, datum?: string, data?: Object): AxiosPromise<any> {
+    let url = endpoint + path;
+
+    if (datum) {
+        url += `/${datum}`;
+    }
+
+    return Axios.patch(url, data);
 }

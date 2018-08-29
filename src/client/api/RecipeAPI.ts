@@ -1,4 +1,4 @@
-import { getApi, createActionType, ActionType, postApi } from "./api";
+import { getApi, createActionType, ActionType, postApi, patchApi } from "./api";
 import { Dispatch } from "redux";
 import { RecipeState, Recipe } from "./models/Recipe";
 import { IAction, ResponseAction } from "./interfaces";
@@ -6,6 +6,7 @@ import { IAction, ResponseAction } from "./interfaces";
 const Actions = {
     ALLRECIPES: "ALLRECIPES",
     CREATERECIPE: "CREATERECIPE",
+    PATCHRECIPE: "PATCHRECIPE",
 }
 
 const ActionTypes = {
@@ -16,6 +17,10 @@ const ActionTypes = {
     CREATERECIPE_REQUEST: createActionType(Actions.CREATERECIPE, ActionType.REQUEST),
     CREATERECIPE_SUCCESS: createActionType(Actions.CREATERECIPE, ActionType.SUCCESS),
     CREATERECIPE_FAILURE: createActionType(Actions.CREATERECIPE, ActionType.FAILURE),
+
+    PATCHRECIPE_REQUEST: createActionType(Actions.PATCHRECIPE, ActionType.REQUEST),
+    PATCHRECIPE_SUCCESS: createActionType(Actions.PATCHRECIPE, ActionType.SUCCESS),
+    PATCHRECIPE_FAILURE: createActionType(Actions.PATCHRECIPE, ActionType.FAILURE),
 }
 
 export function requestAllRecipes() {
@@ -30,6 +35,16 @@ export function requestCreateRecipe(recipe: Recipe) {
     return function(dispatch: Dispatch<any>) {
         return dispatch<any>(postApi(Actions.CREATERECIPE, "recipes/create", null, recipe)).then(function(response) {
             console.log("Created recipe");
+        });
+    }
+}
+
+export function requestPatchRecipe(recipe: Recipe) {
+    return function(dispatch: Dispatch<any>) {
+        const id = String(recipe.id);
+        delete recipe.id;
+        return dispatch<any>(patchApi(Actions.PATCHRECIPE, "recipes/", id, recipe)).then(function(response) {
+            console.log("Patched recipe");
         });
     }
 }
