@@ -105,6 +105,12 @@
                         "null"
                     ]
                 },
+                "quantity": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
                 "recipeId": {
                     "type": "number"
                 },

@@ -16,14 +16,16 @@ export const recipeStepsController = ((database: Database, ajvValidator: ajv.Ajv
             WHERE recipeId == $id
             ORDER BY step`);
 
-        let result = statement.all({
+        const id = request.params["id"];
+
+        const result = statement.all({
             id: request.params["id"]
         }) as RecipeStep[];
 
         if(result) {
-            response.json({
-                id: result
-            });
+            const responseObject = {};
+            responseObject[id] = result;
+            response.json(responseObject);
         } else {
             response.json({});
         }
@@ -53,6 +55,32 @@ export const recipeStepsController = ((database: Database, ajvValidator: ajv.Ajv
         });
 
         response.json(success("recipeSteps/create", Number(result.lastInsertROWID)));
+    });
+
+    router.patch("/:id", (request, response) => {
+        if(!ajvValidator.validate("partialSchema#/definitions/RecipeStep", request.body)) {
+            response.json(error("recipe/patch", ajvValidator.errorsText()));
+            return;
+        }
+
+        let id = request.params["id"];
+        let newRecipeStep: RecipeStep = request.body;
+
+        // TODO: Fix
+        let result = database.patch("RecipeSteps", id, newRecipeStep).run({
+            id: id,
+            description: newRecipeStep.description,
+            foodCategoryId: newRecipeStep.foodCategoryId,
+            type: newRecipeStep.type,
+            duration: newRecipeStep.duration,
+            quantity: newRecipeStep.quantity,
+        });
+
+        if(result.changes > 0) {
+            response.json(success("recipeStep/patch", id));
+        } else {
+            response.json(error("recipeStep/patch", id));
+        }
     });
 
     return router;

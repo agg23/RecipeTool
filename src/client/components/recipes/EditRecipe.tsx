@@ -3,11 +3,18 @@ import { connect, DispatchProp } from "react-redux";
 import { Recipe } from "../../api/models/Recipe";
 import { requestCreateRecipe, requestPatchRecipe } from "../../api/RecipeAPI";
 import { nullIfEmpty } from "../../utility/string";
-import { RecipeStep } from "../../api/models/RecipeStep";
+import { RecipeStep, RecipeStepState } from "../../api/models/RecipeStep";
 import { RouteProps } from "react-router";
+import { requestStepsForRecipe } from "../../api/RecipeStepAPI";
+import { IState } from "../../models/IState";
+import EditRecipeStep from "./EditRecipeStep";
 
 interface IEditRecipeProps {
     recipe?: Recipe;
+}
+
+interface IEditRecipeReduxProps {
+    allSteps: RecipeStepState;
 }
 
 interface IEditRecipeState {
@@ -15,24 +22,23 @@ interface IEditRecipeState {
     imageUrl?: string;
     description?: string;
     servingSize?: string;
-    steps: RecipeStep[];
 }
 
-class EditRecipe extends React.Component<IEditRecipeProps & DispatchProp<any>, IEditRecipeState> {
+class EditRecipe extends React.Component<IEditRecipeReduxProps & IEditRecipeProps & DispatchProp<any>, IEditRecipeState> {
     readonly state: IEditRecipeState = this.props.recipe ? {
         name: this.props.recipe.name,
         imageUrl: this.props.recipe.imageUrl,
         description: this.props.recipe.description,
         servingSize: this.props.recipe.servingSize ? String(this.props.recipe.servingSize) : undefined,
-        // TODO: Add existing steps
-        steps: [],
     } : {
         name: "",
-        steps: [],
     }
 
     componentDidMount() {
         console.log(this.props);
+        if (this.props.recipe) {
+            this.props.dispatch(requestStepsForRecipe(this.props.recipe.id));
+        }
     }
 
     inputChange(event) {
@@ -111,15 +117,29 @@ class EditRecipe extends React.Component<IEditRecipeProps & DispatchProp<any>, I
 
     render() {
         return (
-            <form onSubmit={ this.handleSubmit.bind(this) }>
-                <label htmlFor="name">Recipe Name:</label><input name="name" value={ this.state.name } onChange={ this.inputChange.bind(this) } />
-                <label htmlFor="imageUrl">Image URL:</label><input name="imageUrl" value={ this.state.imageUrl } onChange={ this.inputChange.bind(this) } />
-                <label htmlFor="description">Description:</label><input name="description" value={ this.state.description } onChange={ this.inputChange.bind(this) } />
-                <label htmlFor="servingSize">Serving Size:</label><input name="servingSize" value={ this.state.servingSize } onChange={ this.inputChange.bind(this) } />
-                <input type="submit" value="Submit" />
-            </form>
+            <div>
+                <form onSubmit={ this.handleSubmit.bind(this) }>
+                    <label htmlFor="name">Recipe Name:</label><input name="name" value={ this.state.name } onChange={ this.inputChange.bind(this) } />
+                    <label htmlFor="imageUrl">Image URL:</label><input name="imageUrl" value={ this.state.imageUrl } onChange={ this.inputChange.bind(this) } />
+                    <label htmlFor="description">Description:</label><input name="description" value={ this.state.description } onChange={ this.inputChange.bind(this) } />
+                    <label htmlFor="servingSize">Serving Size:</label><input name="servingSize" value={ this.state.servingSize } onChange={ this.inputChange.bind(this) } />
+                    <input type="submit" value="Submit" />
+                </form>
+                <ul>
+                    {this.props.recipe && this.props.allSteps[this.props.recipe.id] ? this.props.allSteps[this.props.recipe.id].map((step) => {
+                        return <li><EditRecipeStep recipeId={ this.props.recipe.id } step={ step } /></li>
+                    }) : null}
+                    <li><EditRecipeStep recipeId={ this.props.recipe.id } /></li>
+                </ul>
+            </div>
         );
     }
 }
 
-export default connect()(EditRecipe);
+const mapStateToProps = (state: IState): IEditRecipeReduxProps => {
+    return {
+        allSteps: state.api.recipeSteps,
+    }
+}
+
+export default connect<IEditRecipeReduxProps, {}, IEditRecipeProps>(mapStateToProps)(EditRecipe);

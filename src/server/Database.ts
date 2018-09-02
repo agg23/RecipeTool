@@ -72,8 +72,9 @@ export default class Database {
                 'description' TEXT,
                 'foodCategoryId' INTEGER,
                 'type' TEXT,
-                'duration' INTEGER,
-                FOREIGN KEY('recipeId') REFERENCES 'Items'('id')
+                'duration' REAL,
+                'quantity' REAL,
+                FOREIGN KEY('recipeId') REFERENCES 'Recipes'('id')
             )
         `).run();
     }
