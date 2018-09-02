@@ -73,6 +73,7 @@ export function reducers(state: RecipeState = initialState, action: IAction): Re
                 recipes: response,
             }
         }
+        // TODO: Merge result of PATCH
         default:
             return {
                 ...state,

@@ -51,4 +51,6 @@ export interface RecipeStep {
     type?: string;
     /** @nullable */
     duration?: number;
+    /** @nullable */
+    quantity?: number;
 }

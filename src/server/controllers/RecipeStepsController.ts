@@ -11,7 +11,7 @@ export const recipeStepsController = ((database: Database, ajvValidator: ajv.Ajv
 
     router.get("/:id", (request, response) => {
         let statement = database.get().prepare(`SELECT id, step, description,
-            foodCategoryId, type, duration
+            foodCategoryId, type, duration, quantity
             FROM RecipeSteps
             WHERE recipeId == $id
             ORDER BY step`);
@@ -21,7 +21,9 @@ export const recipeStepsController = ((database: Database, ajvValidator: ajv.Ajv
         }) as RecipeStep[];
 
         if(result) {
-            response.json(result);
+            response.json({
+                id: result
+            });
         } else {
             response.json({});
         }
@@ -37,21 +39,21 @@ export const recipeStepsController = ((database: Database, ajvValidator: ajv.Ajv
 
         // TODO: Check if step exists
         let result = database.get().prepare(`INSERT INTO RecipeSteps (
-            recipeId, step, description, foodCategoryId, type, duration
+            recipeId, step, description, foodCategoryId, type, duration, quantity
         ) VALUES (
-            $recipeId, $step, $description, $foodCategoryId, $type, $duration
+            $recipeId, $step, $description, $foodCategoryId, $type, $duration, $quantity
         )`).run({
             recipeId: newStep.recipeId,
             step: newStep.step,
             description: newStep.description,
             foodCategoryId: newStep.foodCategoryId,
             type: newStep.type,
-            duration: newStep.duration
+            duration: newStep.duration,
+            quantity: newStep.quantity,
         });
 
         response.json(success("recipeSteps/create", Number(result.lastInsertROWID)));
     });
-
 
     return router;
 });

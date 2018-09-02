@@ -23,7 +23,7 @@ class EditRecipe extends React.Component<IEditRecipeProps & DispatchProp<any>, I
         name: this.props.recipe.name,
         imageUrl: this.props.recipe.imageUrl,
         description: this.props.recipe.description,
-        servingSize: String(this.props.recipe.servingSize),
+        servingSize: this.props.recipe.servingSize ? String(this.props.recipe.servingSize) : undefined,
         // TODO: Add existing steps
         steps: [],
     } : {
@@ -74,6 +74,7 @@ class EditRecipe extends React.Component<IEditRecipeProps & DispatchProp<any>, I
         let recipe: Recipe;
 
         if (this.props.recipe) {
+            // TODO: Clean up like EditRecipeStep
             recipe = this.props.recipe;
             recipe.name = this.state.name;
 
