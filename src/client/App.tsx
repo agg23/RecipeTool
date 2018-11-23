@@ -1,10 +1,13 @@
 import * as React from "react";
 import RecipeComponent from "./components/RecipeComponent";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import EditRecipe from "./components/recipes/EditRecipe";
 import { connect, DispatchProp } from "react-redux";
 import { IState } from "./models/IState";
 import { Recipe } from "./api/models/Recipe";
+import RecipeListPage from "./pages/RecipeListPage";
+
+import "antd/dist/antd.css";
 import RecipePage from "./pages/RecipePage";
 
 interface IAppReduxProps {
@@ -15,20 +18,15 @@ class App extends React.Component<IAppReduxProps & DispatchProp<any>, {}> {
     render(){
         return(
             <div className="App">
-                {/* <BrowserRouter>
+                <BrowserRouter>
                     <Switch>
-                        <Route exact path="/" component={RecipeComponent} />
+                        <Route exact path="/recipes" component={ RecipeListPage } />
                         <Route path="/recipe/:id" render={(props) => {
-                            const id = parseInt(props.match.params.id);
-                            if (id) {
-                                const recipe = this.props.recipes.find((recipe) => recipe.id === id);
-                                return <EditRecipe recipe={recipe} />
-                            }
-                            return <EditRecipe />
+                            return <RecipePage recipeId={ props.match.params.id } />
                         }}/>
+                        <Route render={ () => <Redirect to="/recipes" /> } />
                     </Switch> 
-                </BrowserRouter> */}
-                <RecipePage />
+                </BrowserRouter>
             </div>
         );
     }

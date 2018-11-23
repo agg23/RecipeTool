@@ -1,35 +1,43 @@
 import * as React from "react";
 import { ChildProps, graphql } from "react-apollo";
 
-import { getRecipes, GetRecipeResponse } from "../graphql/recipe";
+import { GetRecipeWithStepsResponse, getRecipeWithSteps } from "../graphql/recipe";
 
-class RecipePage extends React.Component<ChildProps<{}, GetRecipeResponse, Response>, {}> {
+export interface IRecipePageApolloProps {
+    recipeId: string;
+}
+
+class RecipePage extends React.Component<ChildProps<IRecipePageApolloProps, GetRecipeWithStepsResponse, Response>, {}> {
     public render = () => {
-        console.log(this.props);
         if (this.props.data.loading) {
             return (
                 <div>
                     Loading Recipes
                 </div>
             );
-        } else if (this.props.data.error) {
+        } else if (this.props.data.error || !this.props.data.recipe) {
             return (
                 <div>
                     Failed to load Recipes
                 </div>
             );
-        } else {
-            return (
-                <div>
-                    { this.props.data.recipes.map((recipe) => {
-                        return <div>{ recipe.name }</div>;
-                    }) }
-                </div>
-            );
         }
+
+        return <div>
+            { this.props.data.recipe.name }
+        </div>
     }
 }
 
-const withRecipes = graphql<{}, GetRecipeResponse>(getRecipes);
+const withRecipes = graphql<IRecipePageApolloProps, GetRecipeWithStepsResponse>(getRecipeWithSteps, {
+    options: (props) => {
+        console.log(props);
+        return {
+            variables: {
+                id: props.recipeId,
+            }
+        };
+    }
+});
 
 export default withRecipes(RecipePage);

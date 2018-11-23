@@ -1,14 +1,12 @@
+import { Recipe } from "./Recipe";
+
 export interface RecipeStep {
     id?: string;
-    recipeId: number;
-    step: number;
+    recipe?: Recipe;
+    index: number;
     description?: string;
     foodCategoryId?: number;
     type?: string;
     duration?: number;
     quantity?: number;
-}
-
-export interface RecipeStepState {
-    [id: number]: RecipeStep[];
 }
