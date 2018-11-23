@@ -1,0 +1,49 @@
+type FoodCategory {
+    id: ID! @unique
+    name: String!
+}
+
+type Item {
+    id: ID! @unique
+    name: String!
+    upc: Int! @unique
+    imageUrl: String
+    detailImageUrl: String
+    lastSeenPrice: Float
+    brandName: String!
+    itemSize: Int
+    itemSizeType: String
+    foodCategory: FoodCategory
+}
+
+type FavoriteForFoodCategory {
+    foodCategory: FoodCategory! @unique
+    item: Item!
+}
+
+type InventoryItem {
+    item: Item! @unique
+    units: Float!
+    location: String
+    dateObtained: Int
+}
+
+type Recipe {
+    id: ID! @unique
+    name: String! @unique
+    imageUrl: String
+    description: String
+    servingCount: Float
+    steps: [RecipeStep!]!
+}
+
+type RecipeStep {
+    id: ID! @unique
+    recipe: Recipe
+    index: Int
+    description: String
+    foodCategory: FoodCategory
+    type: String
+    duration: Float
+    quantity: Float
+}
