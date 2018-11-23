@@ -11,7 +11,7 @@ module.exports = {
         filename: "bundle.js"
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js", ".json"]
+        extensions: [".tsx", ".ts", ".mjs", ".js", ".json"]
     },
     module: {
         rules: [
@@ -24,6 +24,11 @@ module.exports = {
                     }
                 }],
                 exclude: /node_modules/,
+            },
+            {
+                test: /\.mjs$/,
+                include: /node_modules/,
+                type: "javascript/auto",
             },
             {
                 test: /\.css$/,

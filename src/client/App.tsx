@@ -5,6 +5,7 @@ import EditRecipe from "./components/recipes/EditRecipe";
 import { connect, DispatchProp } from "react-redux";
 import { IState } from "./models/IState";
 import { Recipe } from "./api/models/Recipe";
+import RecipePage from "./pages/RecipePage";
 
 interface IAppReduxProps {
     recipes: Recipe[];
@@ -14,7 +15,7 @@ class App extends React.Component<IAppReduxProps & DispatchProp<any>, {}> {
     render(){
         return(
             <div className="App">
-                <BrowserRouter>
+                {/* <BrowserRouter>
                     <Switch>
                         <Route exact path="/" component={RecipeComponent} />
                         <Route path="/recipe/:id" render={(props) => {
@@ -26,7 +27,8 @@ class App extends React.Component<IAppReduxProps & DispatchProp<any>, {}> {
                             return <EditRecipe />
                         }}/>
                     </Switch> 
-                </BrowserRouter>
+                </BrowserRouter> */}
+                <RecipePage />
             </div>
         );
     }
