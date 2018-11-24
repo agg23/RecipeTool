@@ -12,30 +12,35 @@ export interface IRecipeStepListProps {
 interface IRecipeStepListState {
     editing: boolean;
     newSteps: RecipeStep[];
+    deletedIds: Set<string>;
 }
 
 export default class RecipeStepList extends React.Component<IRecipeStepListProps, {}> {
     public static getDerivedStateFromProps(newProps: IRecipeStepListProps, oldState: IRecipeStepListState) {
         let newSteps = oldState.newSteps;
+        let deletedIds = oldState.deletedIds;
 
         if (newProps.editing !== oldState.editing) {
             newSteps = [];
+            deletedIds = new Set();
         }
 
         return {
             ...oldState,
             editing: newProps.editing,
             newSteps,
+            deletedIds,
         }
     }
 
     public readonly state: IRecipeStepListState = {
         editing: false,
         newSteps: [],
+        deletedIds: new Set(),
     }
 
     public render = () => {
-        const steps = this.props.steps.concat(this.state.newSteps);
+        const steps = this.props.steps.concat(this.state.newSteps).filter((step) => !this.state.deletedIds.has(step.id));
 
         return (
             <div>
@@ -82,6 +87,9 @@ export default class RecipeStepList extends React.Component<IRecipeStepListProps
                         )
                         ) : step.description }
                 </Form.Item>
+                { editing ? (
+                        <Button onClick={ () => this.deleteStep(step.id) }>Delete Step</Button>
+                    ) : null }
             </List.Item>
         );
     }
@@ -98,5 +106,25 @@ export default class RecipeStepList extends React.Component<IRecipeStepListProps
         this.setState({
             newSteps,
         });
+    }
+
+    private deleteStep = (id: string) => {
+        const filteredNewSteps = this.state.newSteps.filter((step) => step.id !== id);
+
+        if (filteredNewSteps.length !== this.state.newSteps.length) {
+            // Found in newly added
+            this.setState({
+                newSteps: filteredNewSteps,
+            });
+        } else {
+            // Must be in existing nodes
+            const deletedIds = new Set(this.state.deletedIds);
+
+            deletedIds.add(id);
+
+            this.setState({
+                deletedIds,
+            });
+        }
     }
 }

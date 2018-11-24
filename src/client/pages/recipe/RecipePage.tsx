@@ -139,12 +139,12 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
                                 id: oldRecipe.id,
                             }
                         }) as RecipeResponse;
-
-                        const createdStepData = data.data as RecipeStepResponse;
                         
                         const recipe = {
                             ...recipeResponse.recipe
                         };
+
+                        const createdStepData = data.data as RecipeStepResponse;
                         const createdStep = createdStepData.createRecipeStep;
 
                         recipe.steps.push(createdStep);
@@ -159,9 +159,38 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
                             }
                         });
                     }
-                });    
+                });
             } else if (stepsQuery.operationType === OperationType.delete) {
-                // TODO: Mutate
+                client.mutate({
+                    mutation: stepsQuery,
+                    update: (cache, data) => {
+                        const recipeResponse = cache.readQuery({
+                            query: getRecipeWithSteps,
+                            variables: {
+                                id: oldRecipe.id,
+                            }
+                        }) as RecipeResponse;
+                        
+                        const recipe = {
+                            ...recipeResponse.recipe
+                        };
+
+                        const deletedStepData = data.data as RecipeStepResponse;
+                        const createdStepId = deletedStepData.deleteRecipeStep.id;
+
+                        recipe.steps = recipe.steps.filter((step) => step.id !== createdStepId);
+
+                        cache.writeQuery({
+                            query: getRecipeWithSteps,
+                            variables: {
+                                id: oldRecipe.id,
+                            },
+                            data: {
+                                recipe,
+                            }
+                        });
+                    }
+                });
             } else {
                 client.mutate({
                     mutation: stepsQuery,
