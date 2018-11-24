@@ -2,6 +2,8 @@ import gql from "graphql-tag";
 
 import { Recipe } from "../models/Recipe";
 
+/* GET */
+
 export const getRecipes = gql`
     {
         recipes {

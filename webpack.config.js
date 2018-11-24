@@ -1,6 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const AwesomeTypescriptLoader = require("awesome-typescript-loader");
+const keysTransformer = require('ts-transformer-keys/transformer').default;
 
 const outputDirectory = "dist/client";
 
@@ -20,7 +20,12 @@ module.exports = {
                 use: [{
                     loader: "awesome-typescript-loader",
                     options: {
-                        configFileName: "./src/client/tsconfig.json"
+                        configFileName: "./src/client/tsconfig.json",
+                        getCustomTransformers: program => ({
+                            before: [
+                                keysTransformer(program)
+                            ]
+                        })
                     }
                 }],
                 exclude: /node_modules/,

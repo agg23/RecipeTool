@@ -14,7 +14,6 @@ class RecipeListPage extends React.Component<RouteComponentProps<{}> & ChildProp
             dataIndex: "name",
             title: "Recipe Name",
             onCellClick: (recipe) => {
-                console.log(recipe);
                 this.props.history.push(`/recipe/${recipe.id}`);
             }
         },
