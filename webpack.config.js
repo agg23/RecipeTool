@@ -37,7 +37,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ["style-loader", "typings-for-css-modules-loader?namedExport&camelCase", "sass-loader"],
+                use: ["style-loader", "css-loader", "sass-loader"],
                 include: /node_modules/
             },
             {

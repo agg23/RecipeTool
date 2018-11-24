@@ -1,9 +1,12 @@
 import * as React from "react";
 import { RecipeStep } from "../../models/RecipeStep";
-import { List, Avatar } from "antd";
+import { List, Avatar, Form, Input } from "antd";
+import { WrappedFormUtils } from "antd/lib/form/Form";
 
 export interface IRecipeStepListProps {
     steps: RecipeStep[];
+    editing: boolean;
+    form: WrappedFormUtils; 
 }
 
 export default class RecipeStepList extends React.Component<IRecipeStepListProps, {}> {
@@ -18,15 +21,36 @@ export default class RecipeStepList extends React.Component<IRecipeStepListProps
     }
 
     private renderRow = (step: RecipeStep) => {
+        const editing = this.props.editing;
+        const getFieldDecorator = this.props.form.getFieldDecorator;
+        
         return (
             <List.Item
                 key={ step.id }
             >
                 <List.Item.Meta
                     avatar={ <Avatar icon="fund" /> }
-                    title={ step.title }
+                    title={
+                        <Form.Item>
+                            { editing ? (
+                                getFieldDecorator(`newSteps.${step.id}.title`, {
+                                    initialValue: step.title,
+                                })(
+                                    <Input />
+                                )
+                                ) : step.title }
+                        </Form.Item>
+                    }
                 />
-                { step.description }
+                <Form.Item>
+                    { editing ? (
+                        getFieldDecorator(`newSteps.${step.id}.description`, {
+                            initialValue: step.description,
+                        })(
+                            <Input.TextArea />
+                        )
+                        ) : step.description }
+                </Form.Item>
             </List.Item>
         );
     }

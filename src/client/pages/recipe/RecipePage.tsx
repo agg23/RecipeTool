@@ -8,8 +8,10 @@ import { Recipe, keysOfRecipe } from "../../models/Recipe";
 
 import * as styles from "./recipePage.scss";
 import client from "../../graphql/client";
-import { partialMutate } from "../../graphql/request";
+import { partialMutateQuery, partialDictionaryMutateQuery } from "../../graphql/request";
 import { FormComponentProps } from "antd/lib/form";
+import { RecipeStep, keysOfRecipeStep } from "../../models/RecipeStep";
+import { diff } from "deep-object-diff";
 
 export interface IRecipePageApolloProps {
     recipeId: string;
@@ -17,6 +19,10 @@ export interface IRecipePageApolloProps {
 
 interface IRecipePageState {
     editing: boolean;
+}
+
+interface RecipeStepDictionary {
+    [id: string]: RecipeStep,
 }
 
 class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipePageApolloProps, GetRecipeWithStepsResponse, Response>, IRecipePageState> {
@@ -62,7 +68,11 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
                         </Form.Item>     
                     </div>
                     <div className={ styles.recipeSteps }>
-                        <RecipeStepList steps={ recipe.steps } />
+                        <RecipeStepList
+                            steps={ recipe.steps }
+                            editing={ editing }
+                            form={ this.props.form }
+                        />
                     </div>
                     { editing ? (
                             <div>
@@ -94,19 +104,41 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
     private saveEdits = () => {
         const oldRecipe = this.props.data.recipe;
 
+        const fields = this.props.form.getFieldsValue() as Recipe & {
+            newSteps: RecipeStepDictionary,
+        };
+
+        const oldSteps: RecipeStepDictionary = {};
+
+        for (const step of oldRecipe.steps) {
+            oldSteps[step.id] = step;
+        }
+
+        const newSteps = fields.newSteps;
+
+        const stepsQueries = partialDictionaryMutateQuery(oldSteps, newSteps, "createRecipeStep", "updateRecipeStep", "deleteRecipeStep",
+                                                          keysOfRecipeStep, oldRecipe.id, "recipe");
+
         const newRecipe = {
             ...oldRecipe,
             ...this.props.form.getFieldsValue(),
         } as Recipe;
 
-        const query = partialMutate(oldRecipe, newRecipe, "updateRecipe", keysOfRecipe);
+        delete (newRecipe as any).newSteps;
 
-        client.mutate({
-            mutation: query,
-            variables: {
-                id: oldRecipe.id,
-            }
-        });
+        const query = partialMutateQuery(oldRecipe.id, oldRecipe, newRecipe, "updateRecipe", keysOfRecipe);
+
+        for (const stepsQuery of stepsQueries) {
+            client.mutate({
+                mutation: stepsQuery,
+            });
+        }
+
+        if (query) {
+            client.mutate({
+                mutation: query,
+            });
+        }
 
         this.cancelEditing();
     }
