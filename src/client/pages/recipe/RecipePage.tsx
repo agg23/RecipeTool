@@ -2,13 +2,13 @@ import * as React from "react";
 import { ChildProps, graphql } from "react-apollo";
 import { Button, Form, Input } from "antd";
 
-import { GetRecipeWithStepsResponse, getRecipeWithSteps } from "../../graphql/recipe";
+import { RecipeResponse, getRecipeWithSteps, RecipeStepResponse } from "../../graphql/recipe";
 import RecipeStepList from "../../components/step/RecipeStepList";
 import { Recipe, keysOfRecipe } from "../../models/Recipe";
 
 import * as styles from "./recipePage.scss";
 import client from "../../graphql/client";
-import { partialMutateQuery, partialDictionaryMutateQuery } from "../../graphql/request";
+import { partialMutateQuery, partialDictionaryMutateQuery, OperationType } from "../../graphql/request";
 import { FormComponentProps } from "antd/lib/form";
 import { RecipeStep, keysOfRecipeStep } from "../../models/RecipeStep";
 import { diff } from "deep-object-diff";
@@ -25,7 +25,7 @@ interface RecipeStepDictionary {
     [id: string]: RecipeStep,
 }
 
-class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipePageApolloProps, GetRecipeWithStepsResponse, Response>, IRecipePageState> {
+class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipePageApolloProps, RecipeResponse, Response>, IRecipePageState> {
     public readonly state: IRecipePageState = {
         editing: false,
     }
@@ -129,9 +129,44 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
         const query = partialMutateQuery(oldRecipe.id, oldRecipe, newRecipe, "updateRecipe", keysOfRecipe);
 
         for (const stepsQuery of stepsQueries) {
-            client.mutate({
-                mutation: stepsQuery,
-            });
+            if (stepsQuery.operationType === OperationType.create) {
+                client.mutate({
+                    mutation: stepsQuery,
+                    update: (cache, data) => {
+                        const recipeResponse = cache.readQuery({
+                            query: getRecipeWithSteps,
+                            variables: {
+                                id: oldRecipe.id,
+                            }
+                        }) as RecipeResponse;
+
+                        const createdStepData = data.data as RecipeStepResponse;
+                        
+                        const recipe = {
+                            ...recipeResponse.recipe
+                        };
+                        const createdStep = createdStepData.createRecipeStep;
+
+                        recipe.steps.push(createdStep);
+
+                        cache.writeQuery({
+                            query: getRecipeWithSteps,
+                            variables: {
+                                id: oldRecipe.id,
+                            },
+                            data: {
+                                recipe,
+                            }
+                        });
+                    }
+                });    
+            } else if (stepsQuery.operationType === OperationType.delete) {
+                // TODO: Mutate
+            } else {
+                client.mutate({
+                    mutation: stepsQuery,
+                });
+            }
         }
 
         if (query) {
@@ -144,7 +179,7 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
     }
 }
 
-const withRecipes = graphql<IRecipePageApolloProps, GetRecipeWithStepsResponse>(getRecipeWithSteps, {
+const withRecipes = graphql<IRecipePageApolloProps, RecipeResponse>(getRecipeWithSteps, {
     options: (props) => {
         console.log(props);
         return {

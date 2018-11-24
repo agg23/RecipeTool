@@ -1,6 +1,7 @@
 import gql from "graphql-tag";
 
 import { Recipe } from "../models/Recipe";
+import { RecipeStep } from "../models/RecipeStep";
 
 /* GET */
 
@@ -40,10 +41,14 @@ export const getRecipeWithSteps = gql`
     }
 `;
 
-export interface GetRecipesResponse {
-    recipes?: Recipe[];
+export interface RecipesResponse {
+    [name: string]: Recipe[];
 }
 
-export interface GetRecipeWithStepsResponse {
-    recipe: Recipe;
+export interface RecipeResponse {
+    [name: string]: Recipe;
+}
+
+export interface RecipeStepResponse {
+    [name: string]: RecipeStep;
 }

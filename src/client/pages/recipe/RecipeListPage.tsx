@@ -3,11 +3,11 @@ import { ChildProps, graphql } from "react-apollo";
 import { ColumnProps } from "antd/lib/table";
 import { Table } from "antd";
 
-import { getRecipes, GetRecipesResponse } from "../../graphql/recipe";
+import { getRecipes, RecipesResponse } from "../../graphql/recipe";
 import { Recipe } from "../../models/Recipe";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
-class RecipeListPage extends React.Component<RouteComponentProps<{}> & ChildProps<{}, GetRecipesResponse, Response>, {}> {
+class RecipeListPage extends React.Component<RouteComponentProps<{}> & ChildProps<{}, RecipesResponse, Response>, {}> {
     private columns: ColumnProps<Recipe>[] = [
         {
             key: "name",
@@ -58,6 +58,6 @@ class RecipeListPage extends React.Component<RouteComponentProps<{}> & ChildProp
     }
 }
 
-const withRecipes = graphql<{}, GetRecipesResponse>(getRecipes);
+const withRecipes = graphql<{}, RecipesResponse>(getRecipes);
 
 export default withRecipes(withRouter(RecipeListPage));

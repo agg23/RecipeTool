@@ -10,11 +10,27 @@ export interface IRecipeStepListProps {
 }
 
 interface IRecipeStepListState {
+    editing: boolean;
     newSteps: RecipeStep[];
 }
 
 export default class RecipeStepList extends React.Component<IRecipeStepListProps, {}> {
+    public static getDerivedStateFromProps(newProps: IRecipeStepListProps, oldState: IRecipeStepListState) {
+        let newSteps = oldState.newSteps;
+
+        if (newProps.editing !== oldState.editing) {
+            newSteps = [];
+        }
+
+        return {
+            ...oldState,
+            editing: newProps.editing,
+            newSteps,
+        }
+    }
+
     public readonly state: IRecipeStepListState = {
+        editing: false,
         newSteps: [],
     }
 

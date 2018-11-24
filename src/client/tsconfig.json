@@ -6,6 +6,7 @@
       "sourceMap": true,
       "moduleResolution": "node",
       "resolveJsonModule": true,
+      "skipLibCheck": true,
       "jsx": "react"
     },
     "include": [

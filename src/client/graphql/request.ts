@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 import { diff } from "deep-object-diff";
+import { DocumentNode } from "graphql";
+
 import { difference, intersection } from "../utility/set";
 
 export interface IModelKeys {
@@ -10,9 +12,19 @@ export interface IModelKeys {
     excludedKeys?: Set<string>;
 }
 
+export enum OperationType {
+    create,
+    update,
+    delete,
+}
+
+export interface OperationTypedDocumentNode extends DocumentNode {
+    operationType: OperationType;
+}
+
 export const partialDictionaryMutateQuery = <T extends {}>(originalDictionary: { [id: string]: T}, newDictionary: { [id: string]: T},
                                                            createFunction: string, updateFunction: string, deleteFunction: string,
-                                                           allKeys: IModelKeys, connectId?: string, connectKey?: string) => {
+                                                           allKeys: IModelKeys, connectId?: string, connectKey?: string): OperationTypedDocumentNode[] => {
     const queries = [];
 
     const originalIds = new Set(Object.keys(originalDictionary));
@@ -46,7 +58,7 @@ export const partialDictionaryMutateQuery = <T extends {}>(originalDictionary: {
     return queries;
 }
 
-export const createQuery = <T extends {}>(item: T, createFunction: string, allKeys: IModelKeys, connectId?: string, connectKey?: string) => {
+export const createQuery = <T extends {}>(item: T, createFunction: string, allKeys: IModelKeys, connectId?: string, connectKey?: string): OperationTypedDocumentNode => {
     let objectProps = changedPropsQuery(allKeys.keys, item, allKeys.excludedKeys);
     const allKeysQuery = keysQuery(allKeys);
 
@@ -54,7 +66,7 @@ export const createQuery = <T extends {}>(item: T, createFunction: string, allKe
         objectProps += `${connectKey}: {\nconnect:{\nid: "${connectId}"\n}\n}`;
     }
 
-    return gql`
+    const query = gql`
         mutation {
             ${createFunction}(data: {
                 ${objectProps}
@@ -62,11 +74,15 @@ export const createQuery = <T extends {}>(item: T, createFunction: string, allKe
                 ${allKeysQuery}
             }
         }
-    `;
+    ` as OperationTypedDocumentNode;
+
+    query.operationType = OperationType.create;
+
+    return query;
 }
 
-export const deleteQuery = (id: string, deleteFunction: string) => {
-    return gql`
+export const deleteQuery = (id: string, deleteFunction: string): OperationTypedDocumentNode => {
+    const query = gql`
         mutation {
             ${deleteFunction}(where: {
                 id: "${id}"
@@ -74,10 +90,14 @@ export const deleteQuery = (id: string, deleteFunction: string) => {
                 id
             }
         }
-    `;
+    ` as OperationTypedDocumentNode;
+
+    query.operationType = OperationType.delete;
+
+    return query;
 }
 
-export const partialMutateQuery = <T extends {}>(id: string, originalObject: T, newObject: T, mutationFunction: string, allKeys: IModelKeys) => {
+export const partialMutateQuery = <T extends {}>(id: string, originalObject: T, newObject: T, mutationFunction: string, allKeys: IModelKeys): OperationTypedDocumentNode => {
     const changes = diff(originalObject, newObject);
 
     const keys = Object.keys(changes);
@@ -94,7 +114,7 @@ export const partialMutateQuery = <T extends {}>(id: string, originalObject: T, 
 
     const allKeysQuery = keysQuery(allKeys);
 
-    return gql`
+    const query = gql`
         mutation {
             ${mutationFunction}(data: {
                 ${changedProps}
@@ -104,7 +124,11 @@ export const partialMutateQuery = <T extends {}>(id: string, originalObject: T, 
                 ${allKeysQuery}
             }
         }
-    `;
+    ` as OperationTypedDocumentNode;
+
+    query.operationType = OperationType.update;
+
+    return query;
 }
 
 const changedPropsQuery = <T extends {}>(keys: string[], values: T, excludedKeys?: Set<string>) => {
