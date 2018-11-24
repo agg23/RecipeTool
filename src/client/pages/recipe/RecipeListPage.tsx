@@ -30,7 +30,6 @@ class RecipeListPage extends React.Component<RouteComponentProps<{}> & ChildProp
     ];
 
     public render = () => {
-        console.log(this.props);
         if (this.props.data.loading) {
             return (
                 <div>

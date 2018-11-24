@@ -1,20 +1,12 @@
 import * as React from "react";
-import RecipeComponent from "./components/RecipeComponent";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import EditRecipe from "./components/recipes/EditRecipe";
-import { connect, DispatchProp } from "react-redux";
-import { IState } from "./models/IState";
-import { Recipe } from "./api/models/Recipe";
+
+import RecipePage from "./pages/recipe/RecipePage";
 import RecipeListPage from "./pages/recipe/RecipeListPage";
 
 import "antd/dist/antd.css";
-import RecipePage from "./pages/recipe/RecipePage";
 
-interface IAppReduxProps {
-    recipes: Recipe[];
-}
-
-class App extends React.Component<IAppReduxProps & DispatchProp<any>, {}> {
+export default class App extends React.Component<{}, {}> {
     render(){
         return(
             <div className="App">
@@ -31,11 +23,3 @@ class App extends React.Component<IAppReduxProps & DispatchProp<any>, {}> {
         );
     }
 }
-
-const mapStateToProps = (state: IState) => {
-    return {
-        recipes: state.api.recipe.recipes,
-    };
-}
-
-export default connect<IAppReduxProps>(mapStateToProps)(App);

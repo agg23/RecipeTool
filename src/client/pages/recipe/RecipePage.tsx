@@ -210,7 +210,6 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
 
 const withRecipes = graphql<IRecipePageApolloProps, RecipeResponse>(getRecipeWithSteps, {
     options: (props) => {
-        console.log(props);
         return {
             variables: {
                 id: props.recipeId,
