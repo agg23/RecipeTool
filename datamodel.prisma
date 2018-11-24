@@ -39,8 +39,8 @@ type Recipe {
 
 type RecipeStep {
     id: ID! @unique
-    recipe: Recipe
-    index: Int
+    recipe: Recipe!
+    title: String
     description: String
     foodCategory: FoodCategory
     type: String

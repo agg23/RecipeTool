@@ -1,7 +1,11 @@
 import * as React from "react";
 import { ChildProps, graphql } from "react-apollo";
 
-import { GetRecipeWithStepsResponse, getRecipeWithSteps } from "../graphql/recipe";
+import { GetRecipeWithStepsResponse, getRecipeWithSteps } from "../../graphql/recipe";
+
+import * as styles from "./recipePage.scss";
+import RecipeStepList from "../../components/step/RecipeStepList";
+import { Button } from "antd";
 
 export interface IRecipePageApolloProps {
     recipeId: string;
@@ -23,9 +27,22 @@ class RecipePage extends React.Component<ChildProps<IRecipePageApolloProps, GetR
             );
         }
 
-        return <div>
-            { this.props.data.recipe.name }
-        </div>
+        const recipe = this.props.data.recipe;
+
+        return (
+            <div>
+                <div className={ styles.recipeHeader } style={ { backgroundImage: `url('${recipe.imageUrl}')` } }>
+                    <h1>{ recipe.name }</h1>
+                </div>
+                <div className={ styles.recipeDescription }>
+                    { recipe.description }
+                </div>
+                <div className={ styles.recipeSteps }>
+                    <RecipeStepList steps={ recipe.steps } />
+                </div>
+                <Button type="primary">Edit</Button>
+            </div>
+        );
     }
 }
 

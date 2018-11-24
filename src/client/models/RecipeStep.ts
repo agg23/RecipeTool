@@ -4,6 +4,7 @@ export interface RecipeStep {
     id?: string;
     recipe?: Recipe;
     index: number;
+    title?: string;
     description?: string;
     foodCategoryId?: number;
     type?: string;

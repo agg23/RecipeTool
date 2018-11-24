@@ -32,7 +32,13 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ["style-loader", "css-loader"]
+                use: ["style-loader", "typings-for-css-modules-loader?namedExport&camelCase", "sass-loader"],
+                include: /node_modules/
+            },
+            {
+                test: /\.s?css$/,
+                use: ["style-loader", "typings-for-css-modules-loader?namedExport&camelCase&modules=true&importLoaders=1", "sass-loader"],
+                exclude: /node_modules/
             },
             {
                 test: /\.(png|woff|woff2|eot|ttf|svg)$/,
@@ -43,7 +49,6 @@ module.exports = {
     devtool: "inline-source-map",
     devServer: {
         port: 3000,
-        open: true,
         proxy: {
             "/api": "http://localhost:8080"
         },

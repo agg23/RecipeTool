@@ -5,10 +5,10 @@ import EditRecipe from "./components/recipes/EditRecipe";
 import { connect, DispatchProp } from "react-redux";
 import { IState } from "./models/IState";
 import { Recipe } from "./api/models/Recipe";
-import RecipeListPage from "./pages/RecipeListPage";
+import RecipeListPage from "./pages/recipe/RecipeListPage";
 
 import "antd/dist/antd.css";
-import RecipePage from "./pages/RecipePage";
+import RecipePage from "./pages/recipe/RecipePage";
 
 interface IAppReduxProps {
     recipes: Recipe[];

@@ -3,8 +3,8 @@ import { ChildProps, graphql } from "react-apollo";
 import { ColumnProps } from "antd/lib/table";
 import { Table } from "antd";
 
-import { getRecipes, GetRecipesResponse } from "../graphql/recipe";
-import { Recipe } from "../models/Recipe";
+import { getRecipes, GetRecipesResponse } from "../../graphql/recipe";
+import { Recipe } from "../../models/Recipe";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 class RecipeListPage extends React.Component<RouteComponentProps<{}> & ChildProps<{}, GetRecipesResponse, Response>, {}> {

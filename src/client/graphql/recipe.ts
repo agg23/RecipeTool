@@ -28,7 +28,7 @@ export const getRecipeWithSteps = gql`
             servingCount
             steps {
                 id
-                index
+                title
                 description
                 type
                 duration
