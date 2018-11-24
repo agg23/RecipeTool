@@ -36,7 +36,11 @@ export const partialDictionaryMutateQuery = <T extends {}>(originalDictionary: {
         const originalItem = originalDictionary[id];
         const newItem = newDictionary[id];
 
-        queries.push(partialMutateQuery(id, originalItem, newItem, updateFunction, allKeys));
+        const query = partialMutateQuery(id, originalItem, newItem, updateFunction, allKeys);
+
+        if (query != null) {
+            queries.push(query);
+        }
     }
 
     return queries;
@@ -47,7 +51,7 @@ export const createQuery = <T extends {}>(item: T, createFunction: string, allKe
     const allKeysQuery = keysQuery(allKeys);
 
     if (connectId && connectKey) {
-        objectProps += `${connectKey} {\nconnect:{\nid: ${connectId}\n}\n}\n}`;
+        objectProps += `${connectKey}: {\nconnect:{\nid: "${connectId}"\n}\n}`;
     }
 
     return gql`
@@ -83,6 +87,11 @@ export const partialMutateQuery = <T extends {}>(id: string, originalObject: T, 
     }
 
     const changedProps = changedPropsQuery(keys, changes, allKeys.excludedKeys);
+
+    if (changedProps === "") {
+        return null;
+    }
+
     const allKeysQuery = keysQuery(allKeys);
 
     return gql`

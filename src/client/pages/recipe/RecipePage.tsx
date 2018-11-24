@@ -82,7 +82,7 @@ class RecipePage extends React.Component<FormComponentProps & ChildProps<IRecipe
                         ) : (
                         <Button type="primary" onClick={ this.startEditing }>
                             Edit
-                        </Button> 
+                        </Button>
                     ) }
                 </Form>
             </div>
